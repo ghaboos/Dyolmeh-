@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ArrowDown, ArrowUpRight, Mail, Sparkles } from 'lucide-react';
-import ThreeHero from '@/components/ThreeHero';
+import ThreeHero from '../components/ThreeHero';
 
 const projects = [
   { n: '01', title: 'DYOLMEH', type: 'DIGITAL UNIVERSE', text: 'A cinematic personal platform built around media, creativity and interaction.' },

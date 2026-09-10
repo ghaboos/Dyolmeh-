@@ -43,5 +43,6 @@ test('mobile layout keeps nav usable and hides desktop cursor', async ({ page })
   await page.goto('/#top', { waitUntil: 'networkidle' });
   await expect(page.locator('.navlinks')).toBeHidden();
   await expect(page.locator('.cursor-glow')).toBeHidden();
-  await expect(page.locator('.status')).toBeVisible();
+  await expect(page.locator('.status')).toBeHidden();
+  await expect(page.locator('.brand')).toBeVisible();
 });

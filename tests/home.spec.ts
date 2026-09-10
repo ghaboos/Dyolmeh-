@@ -46,6 +46,7 @@ test('navigation targets work', async ({ page }) => {
 });
 
 test('mobile layout keeps the compact navigation and hides desktop cursor', async ({ page }) => {
+  test.skip(await page.evaluate(() => window.innerWidth > 900), 'mobile-only');
   await openHome(page);
   await expect(page.locator('.navlinks')).toBeHidden();
   await expect(page.locator('.cursor-glow')).toBeHidden();

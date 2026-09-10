@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
-async function openHome(page: Parameters<typeof test>[0]['page']) {
+async function openHome(page: Page) {
   await page.goto('/#top', { waitUntil: 'domcontentloaded' });
   await expect(page.locator('nav')).toBeVisible();
 }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowUpRight, Mail, Sparkles } from 'lucide-react';
 import ThreeHero from '../components/ThreeHero';
+import CursorGlow from '../components/CursorGlow';
 
 const projects = [
   { n: '01', title: 'DYOLMEH', type: 'DIGITAL UNIVERSE', text: 'A cinematic personal platform built around media, creativity and interaction.' },
@@ -53,6 +54,7 @@ export default function Home() {
 
   return (
     <main style={{ '--scroll': scrollProgress } as React.CSSProperties}>
+      <CursorGlow />
       <div className="noise" />
       <div className="progress"><span style={{ transform: `scaleX(${scrollProgress})` }} /></div>
       <nav className={scrolled ? 'nav scrolled' : 'nav'}>

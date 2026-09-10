@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+async function openHome(page: Parameters<typeof test>[0]['page']) {
+  await page.goto('/#top', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('nav')).toBeVisible();
+}
+
 test('home page loads without console errors and exposes the main sections', async ({ page }) => {
   const consoleErrors: string[] = [];
   page.on('console', (msg) => {
@@ -9,8 +14,7 @@ test('home page loads without console errors and exposes the main sections', asy
   const pageErrors: string[] = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
-  await page.goto('/#top', { waitUntil: 'networkidle' });
-  await expect(page.locator('nav')).toBeVisible();
+  await openHome(page);
   await expect(page.getByRole('link', { name: 'DD2' })).toBeVisible();
   await expect(page.locator('#about')).toBeAttached();
   await expect(page.locator('#work')).toBeAttached();
@@ -23,7 +27,7 @@ test('home page loads without console errors and exposes the main sections', asy
 });
 
 test('page has no horizontal overflow', async ({ page }) => {
-  await page.goto('/#top', { waitUntil: 'networkidle' });
+  await openHome(page);
   const overflow = await page.evaluate(() => ({
     scrollWidth: document.documentElement.scrollWidth,
     clientWidth: document.documentElement.clientWidth,
@@ -32,7 +36,7 @@ test('page has no horizontal overflow', async ({ page }) => {
 });
 
 test('navigation targets work', async ({ page }) => {
-  await page.goto('/#top', { waitUntil: 'networkidle' });
+  await openHome(page);
   for (const target of ['about', 'work', 'contact']) {
     await page.locator(`a[href="#${target}"]`).first().click();
     await expect(page.locator(`#${target}`)).toBeVisible();
@@ -40,7 +44,7 @@ test('navigation targets work', async ({ page }) => {
 });
 
 test('mobile layout keeps nav usable and hides desktop cursor', async ({ page }) => {
-  await page.goto('/#top', { waitUntil: 'networkidle' });
+  await openHome(page);
   await expect(page.locator('.navlinks')).toBeHidden();
   await expect(page.locator('.cursor-glow')).toBeHidden();
   await expect(page.locator('.status')).toBeHidden();

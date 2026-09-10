@@ -16,14 +16,12 @@ function EnergyCore() {
     if (!group.current || !crystal.current) return;
     const t = state.clock.elapsedTime;
     const pointer = state.pointer;
-
     group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, pointer.y * 0.18, 0.035);
     group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, pointer.x * 0.3, 0.035);
     crystal.current.rotation.x += delta * 0.13;
     crystal.current.rotation.y += delta * 0.24;
     crystal.current.rotation.z += delta * 0.07;
     crystal.current.position.y = Math.sin(t * 0.9) * 0.09;
-
     if (ringA.current) ringA.current.rotation.z += delta * 0.42;
     if (ringB.current) ringB.current.rotation.x -= delta * 0.29;
     if (ringC.current) ringC.current.rotation.y += delta * 0.18;
@@ -34,43 +32,13 @@ function EnergyCore() {
       <Float speed={1.15} rotationIntensity={0.18} floatIntensity={0.45}>
         <mesh ref={crystal} scale={1.3}>
           <icosahedronGeometry args={[1, 3]} />
-          <MeshTransmissionMaterial
-            backside
-            samples={4}
-            thickness={1.05}
-            roughness={0.12}
-            transmission={0.96}
-            ior={1.42}
-            chromaticAberration={0.08}
-            anisotropy={0.3}
-            color="#d9b52e"
-          />
+          <MeshTransmissionMaterial backside samples={4} thickness={1.05} roughness={0.12} transmission={0.96} ior={1.42} chromaticAberration={0.08} anisotropy={0.3} color="#d9b52e" />
         </mesh>
-
-        <mesh scale={1.62}>
-          <sphereGeometry args={[1, 32, 32]} />
-          <meshBasicMaterial color="#f5c542" transparent opacity={0.055} />
-        </mesh>
-
-        <mesh ref={ringA} rotation={[Math.PI / 2.3, 0.35, 0.2]}>
-          <torusGeometry args={[1.5, 0.012, 8, 96]} />
-          <meshBasicMaterial color="#f5c542" transparent opacity={0.8} />
-        </mesh>
-
-        <mesh ref={ringB} rotation={[0.55, Math.PI / 2.1, 0.45]}>
-          <torusGeometry args={[1.73, 0.007, 7, 96]} />
-          <meshBasicMaterial color="#bca8ff" transparent opacity={0.48} />
-        </mesh>
-
-        <mesh ref={ringC} rotation={[0.2, 0.8, Math.PI / 2.4]}>
-          <torusGeometry args={[1.9, 0.004, 6, 96]} />
-          <meshBasicMaterial color="#fff1a8" transparent opacity={0.25} />
-        </mesh>
-
-        <mesh rotation={[0.7, 0.25, 0.1]} scale={0.58}>
-          <torusGeometry args={[1.15, 0.012, 7, 72]} />
-          <meshBasicMaterial color="#6d5cff" transparent opacity={0.42} />
-        </mesh>
+        <mesh scale={1.62}><sphereGeometry args={[1, 32, 32]} /><meshBasicMaterial color="#f5c542" transparent opacity={0.055} /></mesh>
+        <mesh ref={ringA} rotation={[Math.PI / 2.3, 0.35, 0.2]}><torusGeometry args={[1.5, 0.012, 8, 96]} /><meshBasicMaterial color="#f5c542" transparent opacity={0.8} /></mesh>
+        <mesh ref={ringB} rotation={[0.55, Math.PI / 2.1, 0.45]}><torusGeometry args={[1.73, 0.007, 7, 96]} /><meshBasicMaterial color="#bca8ff" transparent opacity={0.48} /></mesh>
+        <mesh ref={ringC} rotation={[0.2, 0.8, Math.PI / 2.4]}><torusGeometry args={[1.9, 0.004, 6, 96]} /><meshBasicMaterial color="#fff1a8" transparent opacity={0.25} /></mesh>
+        <mesh rotation={[0.7, 0.25, 0.1]} scale={0.58}><torusGeometry args={[1.15, 0.012, 7, 72]} /><meshBasicMaterial color="#6d5cff" transparent opacity={0.42} /></mesh>
       </Float>
     </group>
   );
@@ -78,11 +46,7 @@ function EnergyCore() {
 
 function Scene({ compact }: { compact: boolean }) {
   return (
-    <Canvas
-      dpr={compact ? [1, 1.15] : [1, 1.35]}
-      camera={{ position: [0, 0, 6.1], fov: 38 }}
-      gl={{ antialias: !compact, alpha: true, powerPreference: 'high-performance' }}
-    >
+    <>
       <color attach="background" args={['#050505']} />
       <fog attach="fog" args={['#050505', 7, 15]} />
       <ambientLight intensity={0.55} />
@@ -93,20 +57,45 @@ function Scene({ compact }: { compact: boolean }) {
       <Sparkles count={compact ? 70 : 120} scale={8.5} size={1.1} speed={0.2} color="#f5c542" />
       <Stars radius={8} depth={5} count={compact ? 100 : 180} factor={1.5} saturation={0} fade speed={0.25} />
       <Environment preset="night" />
-    </Canvas>
+    </>
   );
 }
 
 export default function ThreeHero() {
+  const hostRef = useRef<HTMLDivElement>(null);
   const [compact, setCompact] = useState(false);
+  const [active, setActive] = useState(true);
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 900px), (pointer: coarse)');
     const update = () => setCompact(media.matches);
     update();
     media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
+
+    const updateVisibility = () => setActive(!document.hidden);
+    document.addEventListener('visibilitychange', updateVisibility);
+
+    const host = hostRef.current;
+    const observer = host ? new IntersectionObserver(([entry]) => setActive(entry.isIntersecting && !document.hidden), { threshold: 0.05 }) : null;
+    if (host && observer) observer.observe(host);
+
+    return () => {
+      media.removeEventListener('change', update);
+      document.removeEventListener('visibilitychange', updateVisibility);
+      observer?.disconnect();
+    };
   }, []);
 
-  return <div className="three-hero"><Scene compact={compact} /></div>;
+  return (
+    <div ref={hostRef} className="three-hero">
+      <Canvas
+        frameloop={active ? 'always' : 'never'}
+        dpr={compact ? [1, 1.15] : [1, 1.35]}
+        camera={{ position: [0, 0, 6.1], fov: 38 }}
+        gl={{ antialias: !compact, alpha: true, powerPreference: 'high-performance' }}
+      >
+        <Scene compact={compact} />
+      </Canvas>
+    </div>
+  );
 }

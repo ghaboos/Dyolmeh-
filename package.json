@@ -2,7 +2,23 @@
   "name": "dd2-portfolio",
   "version": "0.1.0",
   "private": true,
-  "scripts": { "dev": "next dev", "build": "next build", "start": "next start", "lint": "next lint" },
-  "dependencies": { "@react-three/fiber": "latest", "next": "latest", "react": "latest", "react-dom": "latest", "three": "latest", "lucide-react": "latest", "motion": "latest" },
-  "devDependencies": { "@types/node": "latest", "@types/react": "latest", "@types/react-dom": "latest", "typescript": "latest", "tailwindcss": "latest", "@tailwindcss/postcss": "latest" }
+  "scripts": { "dev": "next dev", "build": "next build", "start": "next start" },
+  "dependencies": {
+    "@react-three/drei": "10.7.8",
+    "@react-three/fiber": "latest",
+    "next": "latest",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "three": "latest",
+    "lucide-react": "latest",
+    "motion": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest",
+    "tailwindcss": "latest",
+    "@tailwindcss/postcss": "latest"
+  }
 }

@@ -68,7 +68,7 @@ export default function Home() {
           <div className="hero-actions"><a className="pill primary" href="#work">EXPLORE WORK <ArrowDown size={15} /></a><a className="text-link" href="#contact">LET&apos;S TALK <ArrowUpRight size={15} /></a></div>
         </div>
         <div className="hero-3d" style={{ transform: `translate3d(4vw, ${heroY * 0.22}px, 0) scale(${heroScale})`, opacity: 1 - scrollProgress * 0.55 }}><ThreeHero /><div className="orbit-label label-one">01 / CREATE</div><div className="orbit-label label-two">DD2 — 3D SPACE</div></div>
-        <div className="hero-grid" /><div className="scrollhint">SCROLL TO DISCOVER <span>01 — 06</span></div>
+        <div className="hero-grid" /><div className="scrollhint">SCROLL TO DISCOVER <span>01 — 05</span></div>
       </section>
 
       <section id="about" className="about">

@@ -67,7 +67,7 @@ export default function Home() {
           <p className="intro">I&apos;m Danial — creator, editor and digital explorer. I build visual stories and immersive experiences that don&apos;t feel ordinary.</p>
           <div className="hero-actions"><a className="pill primary" href="#work">EXPLORE WORK <ArrowDown size={15} aria-hidden="true" /></a><a className="text-link" href="#contact">LET&apos;S TALK <ArrowUpRight size={15} aria-hidden="true" /></a></div>
         </div>
-        <div className="hero-3d" style={{ transform: `translate3d(4vw, ${heroY * 0.22}px, 0) scale(${heroScale})`, opacity: 1 - scrollProgress * 0.55 }} aria-hidden="true"><ThreeHero /><div className="orbit-label label-one">01 / CREATE</div><div className="orbit-label label-two">DD2 — 3D SPACE</div></div>
+        <div className="hero-3d" style={{ '--hero-y': `${heroY * 0.22}px`, '--hero-scale': heroScale, opacity: 1 - scrollProgress * 0.55 } as React.CSSProperties} aria-hidden="true"><ThreeHero /><div className="orbit-label label-one">01 / CREATE</div><div className="orbit-label label-two">DD2 — 3D SPACE</div></div>
         <div className="hero-grid" aria-hidden="true" /><div className="scrollhint" aria-hidden="true">SCROLL TO DISCOVER <span>01 — 05</span></div>
       </section>
 

@@ -12,11 +12,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 24
+
       - name: Install dependencies
         run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
       - name: Build production app
         run: npm run build
+
+      - name: Run browser smoke tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dd2-playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore

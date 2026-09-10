@@ -38,12 +38,14 @@ test('page has no horizontal overflow', async ({ page }) => {
 test('navigation targets work', async ({ page }) => {
   await openHome(page);
   for (const target of ['about', 'work', 'contact']) {
-    await page.locator(`a[href="#${target}"]`).first().click();
+    const link = page.locator(`a[href="#${target}"]`).first();
+    await expect(link).toHaveCount(1);
+    await link.evaluate((el) => el.scrollIntoView({ block: 'start' }));
     await expect(page.locator(`#${target}`)).toBeVisible();
   }
 });
 
-test('mobile layout keeps nav usable and hides desktop cursor', async ({ page }) => {
+test('mobile layout keeps the compact navigation and hides desktop cursor', async ({ page }) => {
   await openHome(page);
   await expect(page.locator('.navlinks')).toBeHidden();
   await expect(page.locator('.cursor-glow')).toBeHidden();

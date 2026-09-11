@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUpRight, Mail, Sparkles } from 'lucide-react';
 import ThreeHero from '../components/ThreeHero';
 import CursorGlow from '../components/CursorGlow';
 import ProjectVisual from '../components/ProjectVisual';
+import CaseStudyModal from '../components/CaseStudyModal';
 
 const projects = [
   { n: '01', title: 'DYOLMEH', type: 'DIGITAL UNIVERSE', text: 'A cinematic personal platform built around media, creativity and interaction.' },
@@ -29,6 +30,7 @@ function Reveal({ children, className = '' }: { children: React.ReactNode; class
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeProject, setActiveProject] = useState<(typeof projects)[number] | null>(null);
 
   useEffect(() => {
     let ticking = false;
@@ -76,13 +78,14 @@ export default function Home() {
         <Reveal><p className="mini-title">THE PERSON BEHIND THE PIXELS</p><h2 id="about-title">CURIOUS<br /><span>BY DEFAULT.</span></h2><p className="bigtext">I like turning ideas into experiences — from edited frames and visual identities to interactive digital spaces. I&apos;m always experimenting with new tools, new worlds and better ways to make an idea feel alive.</p><div className="stats"><div><strong>01</strong><span>CREATIVE MIND</span></div><div><strong>24/7</strong><span>IDEAS RUNNING</span></div><div><strong>∞</strong><span>EXPERIMENTS</span></div></div></Reveal>
       </section>
 
-      <section id="work" className="work" aria-labelledby="work-title"><div className="section-head"><p className="section-no" id="work-title">02 / SELECTED WORK</p><p>BUILT / MADE / BROKEN / REBUILT</p></div>{projects.map((p, i) => <Reveal key={p.n} className={`project-reveal delay-${i}`}><article className="project" onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width - 0.5) * 10}deg`); e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height - 0.5) * -6}deg`); }} onMouseLeave={(e) => { e.currentTarget.style.setProperty('--mx', '0deg'); e.currentTarget.style.setProperty('--my', '0deg'); }}><span aria-hidden="true">{p.n}</span><div><small>{p.type}</small><h3>{p.title}</h3><p>{p.text}</p></div><ArrowUpRight aria-hidden="true" /></article></Reveal>)}</section>
+      <section id="work" className="work" aria-labelledby="work-title"><div className="section-head"><p className="section-no" id="work-title">02 / SELECTED WORK</p><p>BUILT / MADE / BROKEN / REBUILT</p></div>{projects.map((p, i) => <Reveal key={p.n} className={`project-reveal delay-${i}`}><article className="project" tabIndex={0} role="button" aria-label={`Open case study: ${p.title}`} onClick={() => setActiveProject(p)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveProject(p); } }} onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--mx', `${((e.clientX - r.left) / r.width - 0.5) * 10}deg`); e.currentTarget.style.setProperty('--my', `${((e.clientY - r.top) / r.height - 0.5) * -6}deg`); }} onMouseLeave={(e) => { e.currentTarget.style.setProperty('--mx', '0deg'); e.currentTarget.style.setProperty('--my', '0deg'); }}><span aria-hidden="true">{p.n}</span><div><small>{p.type}</small><h3>{p.title}</h3><p>{p.text}</p></div><ArrowUpRight aria-hidden="true" /></article></Reveal>)}</section>
 
       <section className="showcase" id="showcase" aria-labelledby="showcase-title"><div className="showcase-head"><Reveal><p className="section-no">03 / 3D SHOWCASE</p><h2 id="showcase-title">WORK<br /><span>IN MOTION.</span></h2></Reveal><p className="showcase-note">MOVE YOUR CURSOR<br />THROUGH THE OBJECTS.</p></div><div className="visual-grid-list">{projects.map((p, i) => <Reveal key={p.n} className={`visual-reveal delay-${i}`}><ProjectVisual index={i} title={p.title} label={p.type} /></Reveal>)}</div></section>
 
       <section className="manifesto" aria-labelledby="manifesto-title"><Reveal><p className="section-no">04 / MANIFESTO</p><div className="manifesto-word" id="manifesto-title">CREATE<br /><i>WITHOUT</i><br />LIMITS.</div></Reveal><Reveal className="cube-reveal"><div className="cube-scene"><div className="cube" aria-hidden="true"><span>DD2</span></div><p>KEEP MOVING.<br />KEEP MAKING.</p></div></Reveal></section>
 
       <section id="contact" className="contact" aria-labelledby="contact-title"><Reveal><p className="section-no">05 / CONTACT</p><h2 id="contact-title">LET&apos;S MAKE<br /><em>SOMETHING.</em></h2><p className="contact-copy">Got an idea, project or weird concept? Send it over.</p><a href="mailto:hello@dyolmeh.ir" className="contact-link" aria-label="Email hello@dyolmeh.ir"><Mail size={18} aria-hidden="true" /> hello@dyolmeh.ir <ArrowUpRight aria-hidden="true" /></a><footer><span>DD2 © 2026</span><span>DANIAL YOLMEH</span><span>BUILT WITH CURIOSITY</span></footer></Reveal></section>
+      <CaseStudyModal project={activeProject} onClose={() => setActiveProject(null)} />
     </main>
   );
 }

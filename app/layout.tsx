@@ -18,7 +18,9 @@ const accessibilityStyles = `
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head><style dangerouslySetInnerHTML={{ __html: accessibilityStyles }} /></head>
+      <head>
+        <style suppressHydrationWarning dangerouslySetInnerHTML={{ __html: accessibilityStyles }} />
+      </head>
       <body>
         <a className="skip-link" href="#top">Skip to content</a>
         {children}
